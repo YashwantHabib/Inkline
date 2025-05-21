@@ -15,8 +15,9 @@ export default function ArticleItem({item}: any) {
     title: item.title,
     author: item['dc:creator'] || 'Unknown',
     pubDate: item.pubDate,
-    description: item['media:description'] || item.description,
+    description: item.description,
     image: item['media:content']?.['@_url'] || item.enclosure?.['@_url'],
+    detail: item['media:description'],
     link: item.link,
   };
 
@@ -32,7 +33,10 @@ export default function ArticleItem({item}: any) {
           {articleData.author.slice(0, 20)}
         </Text>
         <Text style={[styles.bottomText, {color: theme.text}]}>
-          {new Date(articleData.pubDate).toLocaleString()}
+          {new Date(articleData.pubDate).toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit',
+          })}
         </Text>
       </View>
     </TouchableOpacity>
@@ -41,7 +45,7 @@ export default function ArticleItem({item}: any) {
 
 const styles = StyleSheet.create({
   container: {paddingHorizontal: '10%', paddingVertical: '5%'},
-  title: {fontSize: 18, fontWeight: 'bold'},
+  title: {fontSize: 17, fontWeight: 'bold'},
   childContainer: {flexDirection: 'row', justifyContent: 'space-between'},
-  bottomText: {fontSize: 12, paddingTop: 16},
+  bottomText: {fontSize: 14, paddingTop: 16},
 });

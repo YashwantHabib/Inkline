@@ -17,6 +17,7 @@ export type RootStackParamList = {
       author: string;
       pubDate: string;
       description: string;
+      detail: string;
       image: string;
       link: string;
     };

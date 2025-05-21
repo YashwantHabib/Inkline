@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ScrollView,
+  View,
   Text,
   StyleSheet,
   TouchableOpacity,
@@ -9,29 +10,51 @@ import {
 } from 'react-native';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation';
+import {useColorScheme} from '../hooks/useColorScheme';
+import {MoveLeft, Bookmark} from 'lucide-react-native';
 
 type ArticleRouteProp = RouteProp<RootStackParamList, 'Article'>;
 
 export default function ArticleScreen({route}: any) {
   const {params} = useRoute<ArticleRouteProp>();
   const {article} = params;
+  const theme = useColorScheme();
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>{article.title}</Text>
-      <Text style={styles.meta}>
-        By {article.author} • {new Date(article.pubDate).toLocaleString()}
+    <ScrollView style={[styles.container, {backgroundColor: theme.background}]}>
+      <View style={styles.header}>
+        <MoveLeft size={24} color={theme.text} />
+        <Text style={[styles.headerText, {color: theme.text}]}>Details</Text>
+        <Bookmark size={24} color={theme.text} />
+      </View>
+      <Text style={[styles.meta, {color: theme.text}]}>
+        {new Date(article.pubDate).toLocaleString(undefined, {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+        })}
+      </Text>
+      <Text style={[styles.title, {color: theme.text}]}>{article.title}</Text>
+      <Text style={[styles.meta, {color: theme.text}]}>
+        By {article.author}
+      </Text>
+
+      <Text style={[styles.description, {color: theme.text}]}>
+        {article.description}
       </Text>
 
       {article.image && (
         <Image source={{uri: article.image}} style={styles.image} />
       )}
 
-      <Text style={styles.description}>{article.description}</Text>
+      <Text style={[styles.description, {color: theme.text}]}>
+        {article.detail}
+      </Text>
 
-      <TouchableOpacity
-        style={styles.readMore}
-        onPress={() => Linking.openURL(article.link)}>
+      <TouchableOpacity onPress={() => Linking.openURL(article.link)}>
         <Text style={styles.linkText}>Read full article</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -39,7 +62,7 @@ export default function ArticleScreen({route}: any) {
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, padding: 16},
+  container: {flex: 1, paddingHorizontal: '10%'},
   title: {fontSize: 20, fontWeight: 'bold', marginBottom: 12},
   meta: {fontSize: 12, marginBottom: 16},
   image: {
@@ -53,15 +76,17 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     marginBottom: 20,
   },
-  readMore: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    alignSelf: 'flex-start',
-  },
+
   linkText: {
     fontSize: 16,
     fontWeight: '500',
   },
+  header: {
+    paddingTop: '4%',
+    paddingBottom: '16%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerText: {fontSize: 20, fontWeight: 'bold'},
 });
