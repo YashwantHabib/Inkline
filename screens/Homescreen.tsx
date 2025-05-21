@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, View, StyleSheet} from 'react-native';
+import {FlatList, View, StyleSheet, Text} from 'react-native';
 import {fetchRSSFeed} from '../utils/fetchRSS';
 import ArticleItem from '../components/ArticleItem';
+import {useColorScheme} from '../hooks/useColorScheme';
 
 export default function HomeScreen() {
   const [articles, setArticles] = useState<any[]>([]);
@@ -10,9 +11,13 @@ export default function HomeScreen() {
       'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml',
     ).then(setArticles);
   }, []);
+  const theme = useColorScheme();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.background}]}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Inkline</Text>
+      </View>
       <FlatList
         data={articles}
         keyExtractor={(_, index) => index.toString()}
@@ -24,4 +29,6 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {flex: 1},
+  header: {paddingHorizontal: '10%', paddingBottom: '4%'},
+  headerText: {fontSize: 24, fontWeight: 'bold'},
 });
