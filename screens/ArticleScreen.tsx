@@ -8,6 +8,7 @@ import {
   Image,
   Linking,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation';
 import {useColorScheme} from '../hooks/useColorScheme';
@@ -19,11 +20,14 @@ export default function ArticleScreen({route}: any) {
   const {params} = useRoute<ArticleRouteProp>();
   const {article} = params;
   const theme = useColorScheme();
+  const navigation = useNavigation();
 
   return (
     <ScrollView style={[styles.container, {backgroundColor: theme.background}]}>
       <View style={styles.header}>
-        <MoveLeft size={24} color={theme.text} />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MoveLeft size={24} color={theme.text} />
+        </TouchableOpacity>
         <Text style={[styles.headerText, {color: theme.text}]}>Details</Text>
         <Bookmark size={24} color={theme.text} />
       </View>
@@ -55,7 +59,9 @@ export default function ArticleScreen({route}: any) {
       </Text>
 
       <TouchableOpacity onPress={() => Linking.openURL(article.link)}>
-        <Text style={styles.linkText}>Read full article</Text>
+        <Text style={[styles.linkText, {color: theme.text}]}>
+          Read full article
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -63,7 +69,7 @@ export default function ArticleScreen({route}: any) {
 
 const styles = StyleSheet.create({
   container: {flex: 1, paddingHorizontal: '10%'},
-  title: {fontSize: 20, fontWeight: 'bold', marginBottom: 12},
+  title: {fontSize: 20, fontWeight: 'bold', marginBottom: 8},
   meta: {fontSize: 12, marginBottom: 16},
   image: {
     width: '100%',

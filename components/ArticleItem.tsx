@@ -21,6 +21,27 @@ export default function ArticleItem({item}: any) {
     link: item.link,
   };
 
+  function timeAgo(dateString: string): string {
+    const publishedDate = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor(
+      (now.getTime() - publishedDate.getTime()) / 1000,
+    );
+
+    if (diffInSeconds < 60) return `${diffInSeconds} sec ago`;
+    if (diffInSeconds < 3600)
+      return `${Math.floor(diffInSeconds / 60)} min ago`;
+    if (diffInSeconds < 86400)
+      return `${Math.floor(diffInSeconds / 3600)} hour ago`;
+    if (diffInSeconds < 604800)
+      return `${Math.floor(diffInSeconds / 86400)} day ago`;
+
+    return publishedDate.toLocaleDateString([], {
+      hour: 'numeric',
+      minute: '2-digit',
+    });
+  }
+
   return (
     <TouchableOpacity
       style={[styles.container, {backgroundColor: theme.background}]}
@@ -33,10 +54,7 @@ export default function ArticleItem({item}: any) {
           {articleData.author.slice(0, 20)}
         </Text>
         <Text style={[styles.bottomText, {color: theme.text}]}>
-          {new Date(articleData.pubDate).toLocaleTimeString([], {
-            hour: 'numeric',
-            minute: '2-digit',
-          })}
+          {timeAgo(articleData.pubDate)}
         </Text>
       </View>
     </TouchableOpacity>
@@ -45,7 +63,7 @@ export default function ArticleItem({item}: any) {
 
 const styles = StyleSheet.create({
   container: {paddingHorizontal: '10%', paddingVertical: '5%'},
-  title: {fontSize: 17, fontWeight: 'bold'},
+  title: {fontSize: 20, fontWeight: 'bold', marginBottom: 8},
   childContainer: {flexDirection: 'row', justifyContent: 'space-between'},
-  bottomText: {fontSize: 14, paddingTop: 16},
+  bottomText: {fontSize: 14, fontWeight: 400},
 });
