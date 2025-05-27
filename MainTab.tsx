@@ -13,7 +13,7 @@ export default function MainTabs() {
   return (
     <Tab.Navigator
       screenOptions={{headerShown: false}}
-      tabBar={() => <Navbar />}>
+      tabBar={props => <Navbar {...props} />}>
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Explore" component={ExploreScreen} />
       <Tab.Screen name="Bookmarks" component={BookmarksScreen} />
