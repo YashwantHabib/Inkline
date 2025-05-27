@@ -63,7 +63,7 @@ export default function ArticleItem({item}: any) {
 
 const styles = StyleSheet.create({
   container: {paddingHorizontal: '10%', paddingVertical: '5%'},
-  title: {fontSize: 20, fontWeight: 'bold', marginBottom: 8},
+  title: {fontSize: 18, fontWeight: '800', marginBottom: 8},
   childContainer: {flexDirection: 'row', justifyContent: 'space-between'},
   bottomText: {fontSize: 14, fontWeight: 400},
 });

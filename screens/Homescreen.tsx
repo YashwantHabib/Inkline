@@ -3,7 +3,7 @@ import {FlatList, View, StyleSheet, Text} from 'react-native';
 import {fetchRSSFeed} from '../utils/fetchRSS';
 import ArticleItem from '../components/ArticleItem';
 import {useColorScheme} from '../hooks/useColorScheme';
-import {Bolt, Menu} from 'lucide-react-native';
+import ScreenLayout from '../components/ScreenLayout';
 
 export default function HomeScreen() {
   const [articles, setArticles] = useState<any[]>([]);
@@ -20,31 +20,39 @@ export default function HomeScreen() {
     });
   }, []);
 
+  function getGreeting() {
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 12) return 'Good Morning 👋';
+    if (hour >= 12 && hour < 17) return 'Good Afternoon 👋';
+    if (hour >= 17 && hour < 21) return 'Good Evening 👋';
+    return 'Good Night 👋';
+  }
+
   const theme = useColorScheme();
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.background}]}>
-      <View style={styles.header}>
-        <Text style={[styles.headerText, {color: theme.text}]}>Inkline</Text>
-        <Menu size={24} color={theme.text} />
+    <ScreenLayout>
+      <View style={[styles.container, {backgroundColor: theme.background}]}>
+        <View style={styles.header}>
+          <Text style={styles.heading}>{getGreeting()}</Text>
+          <Text>Here's your curated feed</Text>
+        </View>
+        <FlatList
+          data={articles}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({item}) => <ArticleItem item={item} />}
+        />
       </View>
-      <FlatList
-        data={articles}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({item}) => <ArticleItem item={item} />}
-      />
-    </View>
+    </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
   container: {flex: 1},
   header: {
-    paddingHorizontal: '10%',
+    paddingHorizontal: '6%',
     paddingBottom: '4%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
-  headerText: {fontSize: 24, fontWeight: 'bold'},
+  heading: {fontSize: 24, fontWeight: 'bold'},
 });
