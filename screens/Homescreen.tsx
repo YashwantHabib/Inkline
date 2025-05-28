@@ -5,14 +5,24 @@ import {
   StyleSheet,
   Text,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
+import {useContext} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchRSSFeed} from '../utils/fetchRSS';
 import ArticleItem from '../components/ArticleItem';
-import {useColorScheme} from '../hooks/useColorScheme';
 import ScreenLayout from '../components/ScreenLayout';
 import {useFocusEffect} from '@react-navigation/native';
-import {ListFilter, Bolt} from 'lucide-react-native';
+import {Bolt} from 'lucide-react-native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../navigation'; // adjust path if needed
+import {useNavigation} from '@react-navigation/native';
+import {ThemeContext} from '../contexts/ThemeContext';
+
+type HomeScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Settings'
+>;
 
 const CATEGORY_FEEDS: Record<string, string> = {
   Technology: 'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml',
@@ -36,7 +46,9 @@ export default function HomeScreen() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const theme = useColorScheme();
+  const {theme} = useContext(ThemeContext);
+
+  const navigation = useNavigation<HomeScreenNavigationProp>();
 
   useFocusEffect(
     useCallback(() => {
@@ -71,14 +83,6 @@ export default function HomeScreen() {
     }, []),
   );
 
-  function getGreeting() {
-    const hour = new Date().getHours();
-    if (hour >= 5 && hour < 12) return 'Good Morning 👋';
-    if (hour >= 12 && hour < 17) return 'Good Afternoon 👋';
-    if (hour >= 17 && hour < 21) return 'Good Evening 👋';
-    return 'Good Night 👋';
-  }
-
   if (loading) {
     return (
       <ScreenLayout>
@@ -105,7 +109,9 @@ export default function HomeScreen() {
         ListHeaderComponent={
           <View style={[styles.header, {backgroundColor: theme.background}]}>
             <Text style={[styles.heading, {color: theme.text}]}>Home</Text>
-            <Bolt color={theme.text} />
+            <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+              <Bolt color={theme.text} />
+            </TouchableOpacity>
           </View>
         }
         stickyHeaderIndices={[0]} // Make the header stick after scroll

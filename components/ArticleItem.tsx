@@ -3,14 +3,16 @@ import {TouchableOpacity, Text, View, StyleSheet} from 'react-native';
 import {RootStackParamList} from '../navigation';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
-import {useColorScheme} from '../hooks/useColorScheme';
 import {User, Clock} from 'lucide-react-native';
+import {useContext} from 'react';
+
+import {ThemeContext} from '../contexts/ThemeContext';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Article'>;
 
 export default function ArticleItem({item}: any) {
   const navigation = useNavigation<NavigationProp>();
-  const theme = useColorScheme();
+  const {theme} = useContext(ThemeContext);
 
   const articleData = {
     title: item.title,

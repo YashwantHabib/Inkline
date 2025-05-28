@@ -14,7 +14,7 @@ export const darkTheme = {
   primary: '#5409DA',
   card: '#2C2C2E',
   border: '#3A3A3C',
-  cardBackground: '#F9F9F9',
+  cardBackground: '#373737',
 };
 
 export type Theme = typeof lightTheme;

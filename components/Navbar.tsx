@@ -6,7 +6,8 @@ import {
   BookmarkIcon,
   UserIcon,
 } from 'lucide-react-native';
-import {useColorScheme} from '../hooks/useColorScheme';
+import {useContext} from 'react';
+import {ThemeContext} from '../contexts/ThemeContext';
 
 const tabs = [
   {name: 'Home', Icon: HomeIcon},
@@ -15,7 +16,7 @@ const tabs = [
 ];
 
 export default function Navbar({state, navigation}: any) {
-  const theme = useColorScheme();
+  const {theme} = useContext(ThemeContext);
   const currentRouteName = state.routes[state.index].name;
 
   return (

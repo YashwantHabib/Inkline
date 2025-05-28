@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import MainTabs from './MainTab';
 import ArticleScreen from './screens/ArticleScreen';
+import SettingsScreen from './screens/SettingsScreen';
 
 export type RootStackParamList = {
   Tabs: undefined;
@@ -18,6 +19,7 @@ export type RootStackParamList = {
       link: string;
     };
   };
+  Settings: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -28,6 +30,7 @@ export default function Navigation() {
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="Tabs" component={MainTabs} />
         <Stack.Screen name="Article" component={ArticleScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
