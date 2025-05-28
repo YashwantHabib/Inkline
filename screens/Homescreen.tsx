@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   FlatList,
   View,
@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
-import {useContext} from 'react';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchRSSFeed} from '../utils/fetchRSS';
 import ArticleItem from '../components/ArticleItem';
@@ -17,11 +17,12 @@ import {Bolt} from 'lucide-react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigation'; // adjust path if needed
 import {useNavigation} from '@react-navigation/native';
+import {useContext} from 'react';
 import {ThemeContext} from '../contexts/ThemeContext';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
-  'Settings'
+  'Tabs'
 >;
 
 const CATEGORY_FEEDS: Record<string, string> = {
@@ -86,6 +87,12 @@ export default function HomeScreen() {
   if (loading) {
     return (
       <ScreenLayout>
+        <View style={[styles.headerCont, {backgroundColor: theme.background}]}>
+          <Text style={[styles.heading, {color: theme.text}]}>Home</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+            <Bolt color={theme.text} />
+          </TouchableOpacity>
+        </View>
         <View
           style={[
             styles.loadingContainer,
@@ -129,6 +136,15 @@ const styles = StyleSheet.create({
     paddingBottom: '4%',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerCont: {
+    paddingTop: 40,
+    paddingHorizontal: '6%',
+    paddingBottom: '4%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   heading: {fontSize: 23, fontWeight: 'bold'},
   loadingContainer: {

@@ -1,26 +1,33 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {TouchableOpacity, Text, View, StyleSheet} from 'react-native';
 import {RootStackParamList} from '../navigation';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import {User, Clock} from 'lucide-react-native';
-import {useContext} from 'react';
-
 import {ThemeContext} from '../contexts/ThemeContext';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Article'>;
 
-export default function ArticleItem({item}: any) {
+type Props = {
+  item: any;
+  highlight?: string;
+};
+
+export default function ArticleItem({item, highlight = ''}: Props) {
   const navigation = useNavigation<NavigationProp>();
   const {theme} = useContext(ThemeContext);
 
   const articleData = {
     title: item.title,
-    author: item['dc:creator'] || 'Unknown',
+    author: item['dc:creator'] || item.author || 'Unknown',
     pubDate: item.pubDate,
     description: item.description || '',
-    image: item['media:content']?.['@_url'] || item.enclosure?.['@_url'],
-    detail: item['media:description'],
+    image:
+      item.image ||
+      item['media:content']?.['@_url'] ||
+      item.enclosure?.['@_url'] ||
+      '',
+    detail: item.detail || item['media:description'] || '',
     link: item.link,
   };
 
@@ -37,11 +44,29 @@ export default function ArticleItem({item}: any) {
     return publishedDate.toLocaleDateString();
   }
 
-  const previewText =
-    articleData.description
-      .replace(/<[^>]*>/g, '') // Remove HTML tags if present
-      .substring(0, 140)
-      .trim() + '…';
+  const plainTextDescription = articleData.description.replace(/<[^>]*>/g, '');
+  const previewText = plainTextDescription.substring(0, 140).trim() + '…';
+
+  const renderHighlightedText = (text: string, style: any) => {
+    if (!highlight.trim()) return <Text style={style}>{text}</Text>;
+
+    const regex = new RegExp(`(${highlight})`, 'gi');
+    const parts = text.split(regex);
+
+    return (
+      <Text style={style}>
+        {parts.map((part, index) =>
+          part.toLowerCase() === highlight.toLowerCase() ? (
+            <Text key={index} style={[style, styles.highlight]}>
+              {part}
+            </Text>
+          ) : (
+            <Text key={index}>{part}</Text>
+          ),
+        )}
+      </Text>
+    );
+  };
 
   return (
     <TouchableOpacity
@@ -60,20 +85,16 @@ export default function ArticleItem({item}: any) {
       </View>
 
       {/* Title */}
-      <Text
-        style={[styles.title, {color: theme.text}]}
-        numberOfLines={3}
-        ellipsizeMode="tail">
-        {articleData.title}
-      </Text>
+      {renderHighlightedText(articleData.title, [
+        styles.title,
+        {color: theme.text},
+      ])}
 
       {/* Description Preview */}
-      <Text
-        style={[styles.description, {color: theme.text}]}
-        numberOfLines={3}
-        ellipsizeMode="tail">
-        {previewText}
-      </Text>
+      {renderHighlightedText(previewText, [
+        styles.description,
+        {color: theme.text},
+      ])}
 
       {/* Time */}
       <View style={styles.metaRow}>
@@ -117,5 +138,8 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginTop: 1,
+  },
+  highlight: {
+    backgroundColor: '#ffe066',
   },
 });

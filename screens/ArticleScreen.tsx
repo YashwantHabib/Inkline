@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   ScrollView,
   View,
@@ -11,17 +11,31 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation';
-import {MoveLeft, Bookmark} from 'lucide-react-native';
-import {useContext} from 'react';
+import {MoveLeft, Bookmark, BookmarkMinus} from 'lucide-react-native';
 import {ThemeContext} from '../contexts/ThemeContext';
+import {addBookmark, removeBookmark, isBookmarked} from '../utils/storage';
 
 type ArticleRouteProp = RouteProp<RootStackParamList, 'Article'>;
 
-export default function ArticleScreen({route}: any) {
+export default function ArticleScreen() {
   const {params} = useRoute<ArticleRouteProp>();
   const {article} = params;
   const {theme} = useContext(ThemeContext);
   const navigation = useNavigation();
+  const [bookmarked, setBookmarked] = useState(false);
+
+  useEffect(() => {
+    isBookmarked(article.link).then(setBookmarked);
+  }, [article]);
+
+  const toggleBookmark = async () => {
+    if (bookmarked) {
+      await removeBookmark(article.link);
+    } else {
+      await addBookmark(article);
+    }
+    setBookmarked(!bookmarked);
+  };
 
   return (
     <ScrollView
@@ -31,38 +45,32 @@ export default function ArticleScreen({route}: any) {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <MoveLeft size={24} color={theme.text} />
         </TouchableOpacity>
-        <Bookmark size={24} color={theme.text} />
+        <TouchableOpacity onPress={toggleBookmark}>
+          {bookmarked ? (
+            <BookmarkMinus size={24} color={theme.text} />
+          ) : (
+            <Bookmark size={24} color={theme.text} />
+          )}
+        </TouchableOpacity>
       </View>
 
       <View style={styles.contentBlock}>
         <Text style={[styles.title, {color: theme.text}]}>{article.title}</Text>
-
         <Text style={[styles.meta, {color: theme.text}]}>
-          {new Date(article.pubDate).toLocaleString(undefined, {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
+          {new Date(article.pubDate).toLocaleString()}
         </Text>
-
         <Text style={[styles.meta, {color: theme.text}]}>
           By {article.author}
         </Text>
-
         <Text style={[styles.description, {color: theme.text}]}>
           {article.description}
         </Text>
-
         {article.image && (
           <Image source={{uri: article.image}} style={styles.image} />
         )}
-
         <Text style={[styles.description, {color: theme.text}]}>
           {article.detail}
         </Text>
-
         <TouchableOpacity onPress={() => Linking.openURL(article.link)}>
           <Text style={[styles.linkText, {color: theme.text}]}>
             🔗 Read full article
