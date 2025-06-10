@@ -5,6 +5,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import MainTabs from './MainTab';
 import ArticleScreen from './screens/ArticleScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import WebViewScreen from './screens/WebViewScreen';
 
 export type RootStackParamList = {
   Tabs: undefined;
@@ -20,6 +21,7 @@ export type RootStackParamList = {
     };
   };
   Settings: undefined;
+  WebView: {url: string};
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -31,6 +33,7 @@ export default function Navigation() {
         <Stack.Screen name="Tabs" component={MainTabs} />
         <Stack.Screen name="Article" component={ArticleScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="WebView" component={WebViewScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

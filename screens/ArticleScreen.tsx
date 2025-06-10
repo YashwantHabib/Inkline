@@ -14,6 +14,7 @@ import {RootStackParamList} from '../navigation';
 import {MoveLeft, Bookmark, BookmarkMinus} from 'lucide-react-native';
 import {ThemeContext} from '../contexts/ThemeContext';
 import {addBookmark, removeBookmark, isBookmarked} from '../utils/storage';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 type ArticleRouteProp = RouteProp<RootStackParamList, 'Article'>;
 
@@ -21,7 +22,9 @@ export default function ArticleScreen() {
   const {params} = useRoute<ArticleRouteProp>();
   const {article} = params;
   const {theme} = useContext(ThemeContext);
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const [bookmarked, setBookmarked] = useState(false);
 
   useEffect(() => {
@@ -71,7 +74,8 @@ export default function ArticleScreen() {
         <Text style={[styles.description, {color: theme.text}]}>
           {article.detail}
         </Text>
-        <TouchableOpacity onPress={() => Linking.openURL(article.link)}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('WebView', {url: article.link})}>
           <Text style={[styles.linkText, {color: theme.text}]}>
             🔗 Read full article
           </Text>

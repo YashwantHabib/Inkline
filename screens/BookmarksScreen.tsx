@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
-import {Trash} from 'lucide-react-native';
+import {Trash, Bookmark} from 'lucide-react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigation';
@@ -70,8 +70,19 @@ const BookmarksScreen = () => {
           </TouchableOpacity>
         </View>
       }
+      ListEmptyComponent={
+        <View style={[styles.emptyContainer]}>
+          <Bookmark color={theme.text} />
+          <Text style={[styles.emptyText, {color: theme.text}]}>
+            No bookmarks yet.
+          </Text>
+        </View>
+      }
       stickyHeaderIndices={[0]}
-      contentContainerStyle={{paddingTop: 40}}
+      contentContainerStyle={{
+        flexGrow: 1,
+        paddingTop: 40,
+      }}
       style={{backgroundColor: theme.background}}
     />
   );
@@ -105,6 +116,18 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 16,
     fontWeight: '500',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    gap: 16,
+  },
+  emptyText: {
+    fontSize: 16,
+    fontWeight: '400',
+    textAlign: 'center',
   },
 });
 

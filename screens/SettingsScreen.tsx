@@ -203,6 +203,7 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     padding: 16,
+    marginVertical: '10%',
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
